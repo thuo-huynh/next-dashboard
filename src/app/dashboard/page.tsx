@@ -1,3 +1,10 @@
+'use client';
+import { Fragment } from 'react';
+
 export default function page() {
-  <div>hehe</div>;
+  return (
+    <Fragment>
+      <div></div>
+    </Fragment>
+  );
 }
