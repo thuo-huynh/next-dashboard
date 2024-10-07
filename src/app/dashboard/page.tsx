@@ -1,10 +1,11 @@
 'use client';
-import { Fragment } from 'react';
+
+import { OverViewPageView } from '@/components/overview/view/overview';
+
+// export const metadata = {
+//   title: 'Dashboard : Overview'
+// };
 
 export default function page() {
-  return (
-    <Fragment>
-      <div></div>
-    </Fragment>
-  );
+  return <OverViewPageView />;
 }
