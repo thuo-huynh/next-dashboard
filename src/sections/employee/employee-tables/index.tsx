@@ -3,8 +3,12 @@
 import { DataTable } from '@/components/ui/table/data-table';
 import { Employee } from '@/constants/data';
 import { columns } from './colums';
-import { useEmployeeTableFilters } from './use-employee-table-filters';
+import {
+  GENDER_OPTIONS,
+  useEmployeeTableFilters
+} from './use-employee-table-filters';
 import { DataTableSearch } from '@/components/ui/table/data-table-search';
+import { DataTableFilterBox } from '@/components/ui/table/data-table-filter-box';
 
 export default function EmployeeTable({
   data,
@@ -31,6 +35,13 @@ export default function EmployeeTable({
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           setPage={setPage}
+        />
+        <DataTableFilterBox
+          filterKey="gender"
+          title="Gender"
+          options={GENDER_OPTIONS}
+          setFilterValue={setGenderFilter}
+          filterValue={genderFilter}
         />
       </div>
       <DataTable columns={columns} data={data} totalItems={totalData} />
