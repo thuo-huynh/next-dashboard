@@ -9,6 +9,7 @@ import {
 } from './use-employee-table-filters';
 import { DataTableSearch } from '@/components/ui/table/data-table-search';
 import { DataTableFilterBox } from '@/components/ui/table/data-table-filter-box';
+import { DataTableResetFilter } from '@/components/ui/table/data-table-reset-filter';
 
 export default function EmployeeTable({
   data,
@@ -42,6 +43,10 @@ export default function EmployeeTable({
           options={GENDER_OPTIONS}
           setFilterValue={setGenderFilter}
           filterValue={genderFilter}
+        />
+        <DataTableResetFilter
+          isFilterActive={isAnyFilterActive}
+          onReset={resetFilters}
         />
       </div>
       <DataTable columns={columns} data={data} totalItems={totalData} />
