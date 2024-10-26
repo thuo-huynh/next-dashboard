@@ -1,5 +1,5 @@
-import { matchSorter } from 'match-sorter';
 import { faker } from '@faker-js/faker';
+import { matchSorter } from 'match-sorter';
 
 type Gender = 'male' | 'female';
 
@@ -168,3 +168,107 @@ export const fakeUsers = {
 
 // Initialize sample users
 fakeUsers.initialize();
+
+export type Product = {
+  photo_url: string;
+  name: string;
+  description: string;
+  created_at: string;
+  price: number;
+  id: number;
+  category: string;
+  updated_at: string;
+};
+
+export const fakeProducts = {
+  records: [] as Product[],
+  initialize() {
+    const sampleProducts: Product[] = [];
+    function generateRandomProductData(id: number): Product {
+      const categories = [
+        'Electronics',
+        'Furniture',
+        'Clothing',
+        'Toys',
+        'Groceries',
+        'Books',
+        'Jewelry',
+        'Beauty Products'
+      ];
+      return {
+        id,
+        name: faker.commerce.productName(),
+        description: faker.commerce.productDescription(),
+        created_at: faker.date
+          .between({ from: '2022-01-01', to: '2023-12-31' })
+          .toISOString(),
+        photo_url: `https://api.slingacademy.com/public/sample-products/${id}.png`,
+        category: faker.helpers.arrayElement(categories),
+        updated_at: faker.date.recent().toISOString(),
+        price: parseFloat(faker.commerce.price({ min: 5, max: 500, dec: 2 }))
+      };
+    }
+    for (let i = 1; i <= 20; i++) {
+      sampleProducts.push(generateRandomProductData(i));
+    }
+
+    this.records = sampleProducts;
+  },
+  async getAll({
+    categories = [],
+    search
+  }: {
+    categories?: string[];
+    search?: string;
+  }) {
+    let products = [...this.records];
+    if (categories.length > 0) {
+      products = products.filter((product) =>
+        categories.includes(product.category)
+      );
+    }
+    if (search) {
+      products = matchSorter(products, search, {
+        keys: ['name', 'description', 'category']
+      });
+    }
+    return products;
+  },
+  async getProducts({
+    page = 1,
+    limit = 10,
+    categories,
+    search
+  }: {
+    page?: number;
+    limit?: number;
+    categories?: string;
+    search?: string;
+  }) {
+    const categoriesArray = categories ? categories.split('.') : [];
+    const allProducts = await this.getAll({
+      categories: categoriesArray,
+      search
+    });
+    const totalProducts = allProducts.length;
+
+    // Pagination logic
+    const offset = (page - 1) * limit;
+    const paginatedProducts = allProducts.slice(offset, offset + limit);
+
+    // Current time
+    const currentTime = new Date().toISOString();
+
+    return {
+      sucess: true,
+      time: currentTime,
+      message: 'Sample data for testing and learning purposes',
+      total_products: totalProducts,
+      offset,
+      limit,
+      products: paginatedProducts
+    };
+  }
+};
+
+fakeProducts.initialize();
